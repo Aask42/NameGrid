@@ -41,10 +41,9 @@ cd NameGrid
 pip install -r requirements.txt
 ```
 
-3. Install required fonts (or provide your own):
-   - Download and install `Dyslexie_Bold_142436.ttf` (dyslexia-friendly font)
-   - Download and install `fantasy-zone.ttf` (decorative font for year display)
-   - Place font files in the project directory or update paths in [`generate.py`](generate.py:16)
+3. Install fonts (see [Font Options](#font-options) section below for details):
+   - Place your chosen font files in the project directory
+   - Update font paths in [`generate.py`](generate.py:16-17) to match your font files
 
 ## Usage
 
@@ -110,13 +109,50 @@ Each nametag entry requires three fields:
 - `Role`: Job title, organization, or role
 - `Tagline_Mod`: Event name, department, or custom tagline
 
-### Font Requirements
+## Font Options
 
-The script requires two TrueType fonts which you can change as needed:
-1. **Dyslexie Bold**: Accessibility-focused font for main text
-2. **Fantasy Zone**: Decorative font for year display
+NameGrid supports customizable fonts to match your event's branding and accessibility needs. The script uses two fonts that you can easily change:
 
-Update font paths in [`generate.py`](generate.py:16-17) if fonts are located elsewhere.
+### Primary Font (font_1)
+Used for names, roles, and taglines. Update the path at line 13 in [`generate.py`](generate.py:13).
+
+**Recommended Options:**
+- **Dyslexie Bold** - A premium dyslexia-friendly font designed to improve readability
+  - **Source**: [dyslexiefont.com](https://dyslexiefont.com/) (paid font)
+  - **Benefits**: Specifically designed for people with dyslexia, improves reading speed and accuracy
+  - **File**: `Dyslexie_Bold_142436.ttf`
+
+- **OpenDyslexic** - Free, open-source dyslexia-friendly alternative
+  - **Source**: [opendyslexic.org](https://opendyslexic.org/) (free)
+  - **Benefits**: Open-source font designed to increase reading proficiency for dyslexic readers
+  - **File**: Various weights available for download
+
+- **System Fonts** - Use any TrueType font installed on your system
+  - Examples: Arial, Helvetica, Times New Roman, etc.
+
+### Decorative Font (font_2)
+Used for year display and decorative elements. Update the path at line 14 in [`generate.py`](generate.py:14).
+
+**Default Option:**
+- **Fantasy Zone** - Stylized decorative font for eye-catching year display
+  - **Source**: [dafont.com/fantasy-zone.font](https://www.dafont.com/fantasy-zone.font) (free for personal use)
+  - **File**: `fantasy-zone.ttf`
+
+### Changing Fonts
+
+To use different fonts:
+
+1. **Download your chosen fonts** from the sources above or use your own
+2. **Place font files** in the NameGrid project directory
+3. **Update font paths** in [`generate.py`](generate.py:16-17):
+   ```python
+   # Example font configuration
+   font_1_path = "your-primary-font.ttf"      # Primary font for text
+   font_2_path = "your-decorative-font.ttf"   # Decorative font for year
+   ```
+4. **Test the output** by running the generator
+
+**Note**: While Dyslexie is a paid font, it offers significant accessibility benefits. OpenDyslexic provides a free alternative with similar accessibility features. Choose the option that best fits your budget and accessibility requirements.
 
 ### Logo Requirements
 
