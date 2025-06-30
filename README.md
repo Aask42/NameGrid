@@ -43,25 +43,34 @@ pip install -r requirements.txt
 
 3. Install fonts (see [Font Options](#font-options) section below for details):
    - Place your chosen font files in the project directory
-   - Update font paths in [`generate.py`](generate.py:16-17) to match your font files
+   - Update font paths in [`generate.py`](generate.py:25-29) to match your font files
 
 ## Usage
 
 ### Basic Usage
 
-1. Edit the `nametag_names` list in [`generate.py`](generate.py:157) with your participant data:
-```python
-nametag_names = [
-    {"name": "John Doe", "Role": "Software Engineer", "Tagline_Mod": "Innovation Team"},
-    {"name": "Jane Smith", "Role": "Project Manager", "Tagline_Mod": "Leadership Excellence"},
-    # Add more participants...
-]
-```
+1. Edit the list of names in [`nametags.csv`](nametags.csv) with your participant data
 
-2. Update the year and logo path:
+2. Update the file paths and other settings [`generate.py`](generate.py:12-29):
 ```python
-year = "2025"
-logo_path = "your_logo.png"
+# Configure your nametag settings
+inputFile = "nametags.csv" # NOTE: MUST be a CSV and columns MUST be: attendeeName,companyName,eventName
+outputFile = "nametags.pdf" # Format should be: filename.pdf
+logoFile = "logoold.png"
+watermarkSize = 2.5 # Size in inches (2.5 is a good default)
+watermarkAngle = 45 # Counter-clockwise rotation in degrees (45 is a good default)
+watermarkOpacity = 10 # Opacity as percentage (10 is a good default)
+
+# Register whatever fonts you want to use
+# Here I'm using Dyslexie and a fancy font for the year
+# NOTE: YOU MUST HAVE THESE FONTS INSTALLED OR AVAILABLE IN THE PATH 
+# OR YOU MUST PROVIDE THE CORRECT PATHS TO THE FONT FILES
+
+font_1 = "Dyslexie"
+font_2 = "FancyFont"
+
+pdfmetrics.registerFont(TTFont('Dyslexie', './Dyslexie_Bold_142436.ttf'))
+pdfmetrics.registerFont(TTFont('FancyFont', './fantasy-zone.ttf'))
 ```
 
 3. Run the generator:
@@ -93,11 +102,12 @@ python generate.py
 NameGrid/
 ├── generate.py              # Main nametag generator script
 ├── requirements.txt         # Python dependencies
-├── README.md               # This file
-├── logoold.png             # Default logo file
+├── README.md                # This file
+├── logoold.png              # Default logo file
+├── nametags.csv             # CSV file with attendee information
 ├── Dyslexie_Bold_142436.ttf # Accessibility font (not included)
-├── fantasy-zone.ttf        # Decorative font (not included)
-└── nametags.pdf            # Generated output (created after running)
+├── fantasy-zone.ttf         # Decorative font (not included)
+└── nametags.pdf             # Generated output (created after running)
 ```
 
 ## Configuration
@@ -105,16 +115,16 @@ NameGrid/
 ### Data Format
 
 Each nametag entry requires three fields:
-- `name`: Participant's full name
-- `Role`: Job title, organization, or role
-- `Tagline_Mod`: Event name, department, or custom tagline
+- `attendeeName`: Participant's full name
+- `companyName`: Job title, organization, or role
+- `eventName`: Event name, department, or custom tagline
 
 ## Font Options
 
 NameGrid supports customizable fonts to match your event's branding and accessibility needs. The script uses two fonts that you can easily change:
 
 ### Primary Font (font_1)
-Used for names, roles, and taglines. Update the path at line 13 in [`generate.py`](generate.py:13).
+Used for names, roles, and taglines. Update the path at line 25 in [`generate.py`](generate.py:25).
 
 **Recommended Options:**
 - **Dyslexie Bold** - A premium dyslexia-friendly font designed to improve readability
@@ -131,7 +141,7 @@ Used for names, roles, and taglines. Update the path at line 13 in [`generate.py
   - Examples: Arial, Helvetica, Times New Roman, etc.
 
 ### Decorative Font (font_2)
-Used for year display and decorative elements. Update the path at line 14 in [`generate.py`](generate.py:14).
+Used for year display and decorative elements. Update the path at line 26 in [`generate.py`](generate.py:26).
 
 **Default Option:**
 - **Fantasy Zone** - Stylized decorative font for eye-catching year display
@@ -144,7 +154,7 @@ To use different fonts:
 
 1. **Download your chosen fonts** from the sources above or use your own
 2. **Place font files** in the NameGrid project directory
-3. **Update font paths** in [`generate.py`](generate.py:16-17):
+3. **Update font paths** in [`generate.py`](generate.py:28-29):
    ```python
    # Example font configuration
    font_1_path = "your-primary-font.ttf"      # Primary font for text
@@ -158,7 +168,7 @@ To use different fonts:
 
 - **Format**: PNG with transparency support recommended
 - **Size**: Scalable (automatically resized)
-- **Placement**: Update `logo_path` variable in [`generate.py`](generate.py:183)
+- **Placement**: Update `logoFile` variable in [`generate.py`](generate.py:15)
 
 ## Troubleshooting
 
