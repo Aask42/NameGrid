@@ -4,6 +4,18 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.colors import black, lightgrey, navy, Color
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
+import csv
+from pathlib import Path
+from typing import List, Dict, Union
+from datetime import date
+
+# Configure your nametag settings
+inputFile = "nametags.csv" # NOTE: MUST be a CSV and columns MUST be: attendeeName,companyName,eventName
+outputFile = "nametags.pdf" # Format should be: filename.pdf
+logoFile = "logoold.png"
+watermarkSize = 2.5 # Size in inches (2.5 is a good default)
+watermarkAngle = 45 # Counter-clockwise rotation in degrees (45 is a good default)
+watermarkOpacity = 10 # Opacity as percentage (10 is a good default)
 
 # Register whatever fonts you want to use
 # Here I'm using Dyslexie and a fancy font for the year
@@ -13,8 +25,8 @@ from reportlab.pdfbase import pdfmetrics
 font_1 = "Dyslexie"
 font_2 = "FancyFont"
 
-pdfmetrics.registerFont(TTFont('Dyslexie', 'Dyslexie_Bold_142436.ttf'))
-pdfmetrics.registerFont(TTFont('FancyFont', 'fantasy-zone.ttf'))  # Replace with the path to your fancy font
+pdfmetrics.registerFont(TTFont('Dyslexie', './Dyslexie_Bold_142436.ttf'))
+pdfmetrics.registerFont(TTFont('FancyFont', './fantasy-zone.ttf'))  # Replace with the path to your fancy font
 
 def draw_dotted_border(c, x, y, width, height, dot_size=1):
     c.setStrokeColor(lightgrey)
@@ -49,11 +61,11 @@ def draw_multiline_text(c, text, max_width, x, y, font, font_size):
 
 def draw_nametag(c, x, y, name, role, tagline, year, logo_path):
     # Draw the watermark logo
-    logo_size = 2.5 * inch  # Size of the watermark logo
+    logo_size = watermarkSize * inch  # Size of the watermark logo
     c.saveState()
     c.translate(x + 1.7 * inch, y + 1.7 * inch)
-    c.rotate(45)
-    c.setFillColor(Color(0, 0, 0, alpha=0.1))  # Faded color
+    c.rotate(watermarkAngle)
+    c.setFillColor(Color(0, 0, 0, alpha=watermarkOpacity/100))  # Faded color
     c.drawImage(logo_path, -logo_size / 2, -logo_size / 2, logo_size, logo_size, mask='auto')
     c.restoreState()
 
@@ -115,6 +127,25 @@ def draw_nametag(c, x, y, name, role, tagline, year, logo_path):
     logo_size = 1 * inch  # Size of the logo
     c.drawImage(logo_path, x + 3.4 * inch - logo_size - 5 * mm, y + 5 * mm, logo_size, logo_size, mask='auto')
 
+def load_nametags(csv_path: Union[str, Path]) -> List[Dict[str, str]]:
+    nametag_names: List[Dict[str, str]] = []
+    with Path(csv_path).expanduser().open(newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        # Optional sanity-check: make sure the needed columns exist
+        expected = {"attendeeName", "companyName", "eventName"}
+        if not expected.issubset(reader.fieldnames or []):
+            missing = expected - set(reader.fieldnames or [])
+            raise ValueError(f"CSV is missing columns: {', '.join(missing)}")
+        for row in reader:
+            nametag_names.append(
+                {
+                    "name": row["attendeeName"].strip(),
+                    "Role": row["companyName"].strip(),
+                    "Tagline_Mod": row["eventName"].strip(),
+                }
+            )
+    return nametag_names
+
 def create_nametags(pdf_filename, nametag_names, logo_path, year):
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     
@@ -154,30 +185,9 @@ def create_nametags(pdf_filename, nametag_names, logo_path, year):
         c.showPage()
 
     c.save()
-nametag_names = [
-  {"name": "Ben Dover", "Role": "MSNBC", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Sharon Peters", "Role": "Pansy", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Tom Cruise", "Role": "Pansy", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Heywood G. Blome", "Role": "Pansy", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Chris P. Bacon", "Role": "CNN", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Hugh Jass", "Role": "CNH Industrial", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Ima Pigg", "Role": "Case IH", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Anita Bath", "Role": "MSNBC", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Al Beback", "Role": "FOX NEWS", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Bea O'Problem", "Role": "New Holland", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Pat Myback", "Role": "Massey Ferguson", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Ray Gunn", "Role": "AL JIZZARA", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Olive Yew", "Role": "Challenger", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Paige Turner", "Role": "FOX NEWS", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Perry Scope", "Role": "CNN", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Rick O'Shea", "Role": "MSNBC", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Sue Yu", "Role": "CNH Industrial", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Stan Still", "Role": "Case IH", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Tara Misu", "Role": "New Holland", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"},
-  {"name": "Will Power", "Role": "Massey Ferguson", "Tagline_Mod": "Cyb3rTruc|< Ch4ll3ng3"}
-    # Add more names as needed
-]
 
-year = "2024"
+nametag_names = load_nametags(inputFile)
 
-create_nametags("nametags.pdf", nametag_names, "logoold.png", year)
+year = str(date.today().year)
+
+create_nametags(outputFile, nametag_names, logoFile, year)
