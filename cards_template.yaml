@@ -1,0 +1,99 @@
+# Trading Cards Template
+# This is a template file showing the structure for creating trading cards
+# Replace the example data with your own card information
+
+cards:
+  # Example Card 1: Fantasy Character
+  - title: "Dragon Warrior"
+    type: "Attack"
+    img: "images/dragon_warrior.png"  # Path to your character image
+    action: "Deal 3 damage to target opponent.\nGain 1 energy crystal."
+    alt: "ROAR!"
+    detail: "Legendary warrior from the ancient realm"
+    # Optional: Custom AI prompt for background generation
+    # ai_prompt: "Epic fantasy battlefield with dragons soaring overhead"
+    # Optional: Modify existing artwork
+    # modify_prompt: "Add magical fire effects around the character"
+
+  # Example Card 2: Tech Character  
+  - title: "Cyber Specialist"
+    type: "Hacker"
+    img: "images/hacker.png"
+    action: "Steal 2 credits from each opponent.\nPlay only during night phase."
+    alt: "System breach"
+    detail: "Elite cybersecurity expert"
+
+  # Example Card 3: Defensive Character
+  - title: "Shield Guardian"
+    type: "Defense"
+    img: "images/guardian.png"
+    action: "All damage to you is reduced by 2 this turn.\nDraw 1 card."
+    alt: "Stand firm"
+    detail: "Protector of the innocent"
+
+  # Example Card 4: Special Ability Character
+  - title: "Mystic Oracle"
+    type: "Special"
+    img: "images/oracle.png"
+    action: "Look at the top 3 cards of any player's deck.\nYou may rearrange them in any order."
+    alt: "I see all"
+    detail: "Seer of hidden truths"
+
+  # Example Card 5: Unique Type Character
+  - title: "Space Explorer"
+    type: "Space-Human"
+    img: "images/astronaut.png"
+    action: "When Space Explorer enters play, all opponents must discard 1 card.\nImmune to earth-based attacks."
+    alt: "To infinity!"
+    detail: "Boldly going where no one has gone before"
+
+  # Example Card 6: Mysterious Character
+  - title: "Shadow Agent"
+    type: "Alleged Hacker"
+    img: "images/shadow.png"
+    action: "Target opponent reveals their hand.\nYou may choose 1 card for them to discard."
+    alt: "Who am I really?"
+    detail: "Identity classified"
+
+# Card Structure Reference:
+# 
+# Required Fields:
+# - title: The name of the card (string)
+# - type: The card type (string) - examples: "Attack", "Defense", "Hacker", "Special", "Burninator", "Alleged Hacker", "Space-Human"
+# - img: Path to the character image file (string)
+# - action: The card's game effect/ability (string, can use \n for line breaks)
+# - alt: Short flavor text or battle cry (string)
+# - detail: Additional flavor text or lore (string)
+#
+# Optional Fields:
+# - ai_prompt: Custom prompt for AI background generation (string)
+# - modify_prompt: Instructions for modifying existing artwork (string)
+#
+# Card Types and Their Themes:
+# - "Attack": Offensive abilities, damage dealing
+# - "Defense": Protective abilities, damage reduction
+# - "Hacker": Technology-based abilities, resource manipulation
+# - "Burninator": Fire/destruction themed abilities
+# - "Special": Unique or powerful abilities
+# - "Alleged Hacker": Mysterious tech abilities with uncertain effects
+# - "Space-Human": Sci-fi themed abilities, space-related effects
+#
+# Image Requirements:
+# - Place image files in the "images/" directory
+# - Supported formats: PNG, JPG, JPEG
+# - Recommended: Square or portrait orientation
+# - The AI system will analyze the image and generate complementary backgrounds
+#
+# AI Background Generation:
+# - If no ai_prompt is specified, backgrounds are auto-generated based on:
+#   * Card title and type
+#   * Action text content
+#   * Subject image analysis (colors, composition, filename hints)
+# - Custom ai_prompt overrides auto-generation
+# - modify_prompt can be used to enhance existing artwork
+#
+# Usage:
+# 1. Copy this template to "cards.yaml"
+# 2. Replace example cards with your own
+# 3. Add your character images to the "images/" directory
+# 4. Run: python gen_cards_ai.py
